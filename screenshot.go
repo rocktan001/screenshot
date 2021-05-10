@@ -9,6 +9,7 @@ package screenshot
 struct Frame {
     char* pFrame;
     int pSize;
+    int result;
 };
 */
 import "C"
@@ -23,7 +24,6 @@ import (
 func init() {
 	bounds := screenshot.GetDisplayBounds(0)
 	C.Init(C.int(bounds.Dx()), C.int(bounds.Dy()))
-	C.Start()
 }
 
 func Capture(width, height int) (*image.RGBA, error) {
@@ -31,7 +31,13 @@ func Capture(width, height int) (*image.RGBA, error) {
 	rect := image.Rect(0, 0, width, height)
 	img := image.NewRGBA(rect)
 
-	C.Update(&f.pFrame, &f.pSize)
+	for {
+
+		C.Update(&f.pFrame, &f.pSize, &f.result)
+		if f.result == 1 {
+			break
+		}
+	}
 	var buf []byte
 	hdr := (*reflect.SliceHeader)(unsafe.Pointer(&buf))
 	hdr.Data = uintptr(unsafe.Pointer(f.pFrame))

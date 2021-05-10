@@ -9,3 +9,4 @@ include_directories(../include)
 
 add_library(screen STATIC screen.cpp) # 生成静态库
 
+

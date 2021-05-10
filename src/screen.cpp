@@ -34,8 +34,6 @@ int Init(int width, int height) {
     pscreen->Init(width, height);
 }
 
-void Start() { pscreen->Start(); }
-
-void Update(char **ppData, int *psize) { pscreen->Update(ppData, psize); }
+void Update(char **ppData, int *psize, int *result) { pscreen->Update(ppData, psize,result); }
 
 void Shutdown() { pscreen->Shutdown(); }
