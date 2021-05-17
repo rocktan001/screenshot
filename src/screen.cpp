@@ -6,7 +6,7 @@ extern "C" {
 }
 
 IInterface* pscreen = NULL;
-
+int dw,dh;
 
 int Init(int width, int height) {
     HMODULE hModule = LoadLibrary("Screencapture.dll");
@@ -14,7 +14,8 @@ int Init(int width, int height) {
         printf("load Screencapture.dll error!\n");
         return FALSE;
     }
-
+    dw = width;
+    dh = height;
     typedef void* (*PFUNC_CreateObject)();
     PFUNC_CreateObject pfnCreateObject;
 
@@ -34,6 +35,20 @@ int Init(int width, int height) {
     pscreen->Init(width, height);
 }
 
-void Update(char **ppData, int *psize, int *result) { pscreen->Update(ppData, psize,result); }
+void Update(char **ppData, int *psize, int *result) { 
+    pscreen->Update(ppData, psize,result);
+    //BGRA =>RGBA
+      for (int h = 0; h < dh; h++) {
+          for (int w = 0; w < dw; w++) {
+              char* b = &((char*) *ppData)[h * dw * 4 + w * 4];
+              char* r = &((char*) *ppData)[h * dw * 4 + w * 4 + 2];
+              // BGRA==>RGBA
+              char temp;
+              temp = *b;
+              *b   = *r;
+              *r   = temp;
+          }
+      }
+ }
 
 void Shutdown() { pscreen->Shutdown(); }

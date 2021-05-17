@@ -558,7 +558,7 @@ namespace sc {
       }
 
       memcpy(gpframe_data, map.pData, map.RowPitch*settings.output_height);
-#if 1
+#if 0
       for (int h = 0; h < settings.output_height; h++) {
           for (int w = 0; w < settings.output_width; w++) {
               char* b = &((char*) gpframe_data)[h * settings.output_width * 4 + w * 4];
